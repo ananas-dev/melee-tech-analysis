@@ -47,6 +47,30 @@ def data(game):
         data.append(rm_consecutives)
     return(data)
 
+## LOCATION ##
+
+def data(game):
+    p1_position=[]
+    p2_position=[]
+    p3_position=[]
+    p4_position=[]
+    for frames in game.frames:
+        if frames.ports[0] != None:
+            p1_frames = frames.ports[0].leader 
+            p1_position.append(p1_frames.post.position)
+        if frames.ports[1] != None:
+            p2_frames = frames.ports[1].leader
+            p2_position.append(p2_frames.post.position)
+        if frames.ports[2] != None:
+            p3_frames = frames.ports[2].leader
+            p3_position.append(p3_frames.post.position)
+        if frames.ports[3] != None:
+            p4_frames = frames.ports[3].leader
+            p4_position.append(p4_frames.post.position)
+    position = [p1_position, p2_position, p3_position, p4_position]
+    return(position)
+
+
 ## ATTACKS ##
 
 def attacks(game):
