@@ -1,5 +1,6 @@
 # File --analysis.py--
 
+import pandas as pd
 from itertools import groupby
 
 ## CHARACTER ##
@@ -20,81 +21,36 @@ def stage(game):
     stage = game.start.stage
     return(stage)
 
-## GENERAL DATA ##
+## DATA FRAME ##
 
-def data(game):
-    p1_data=[]
-    p2_data=[]
-    p3_data=[]
-    p4_data=[]
-    for frames in game.frames:
-        if frames.ports[0] != None:
-            p1_frames = frames.ports[0].leader 
-            p1_data.append(p1_frames.post.state)
-        if frames.ports[1] != None:
-            p2_frames = frames.ports[1].leader
-            p2_data.append(p2_frames.post.state)
-        if frames.ports[2] != None:
-            p3_frames = frames.ports[2].leader
-            p3_data.append(p3_frames.post.state)
-        if frames.ports[3] != None:
-            p4_frames = frames.ports[3].leader
-            p4_data.append(p4_frames.post.state)
-    data_long = [p1_data, p2_data, p3_data, p4_data]
-    data = []
-    for x in data_long:
-        rm_consecutives = [i[0] for i in groupby(x)]
-        data.append(rm_consecutives)
-    return(data)
-
-## LOCATION ##
-
-def data(game):
+def data(game, player):
+    p1_state=[]
     p1_position=[]
+    p2_state=[]
     p2_position=[]
+    p3_state=[]
     p3_position=[]
+    p4_state=[]
     p4_position=[]
     for frames in game.frames:
         if frames.ports[0] != None:
             p1_frames = frames.ports[0].leader 
+            p1_state.append(p1_frames.post.state)
             p1_position.append(p1_frames.post.position)
         if frames.ports[1] != None:
             p2_frames = frames.ports[1].leader
-            p2_position.append(p2_frames.post.position)
+            p2_state.append(p2_frames.post.state)
+            p2_position.append(p1_frames.post.position)
         if frames.ports[2] != None:
             p3_frames = frames.ports[2].leader
-            p3_position.append(p3_frames.post.position)
+            p3_state.append(p3_frames.post.state)
+            p3_position.append(p1_frames.post.position)
         if frames.ports[3] != None:
             p4_frames = frames.ports[3].leader
-            p4_position.append(p4_frames.post.position)
+            p4_state.append(p4_frames.post.state)
+            p4_position.append(p1_frames.post.position)
+    state = [p1_state, p2_state, p3_state, p4_state]
     position = [p1_position, p2_position, p3_position, p4_position]
-    return(position)
-
-
-## ATTACKS ##
-
-def attacks(game):
-    p1_attacks=[]
-    p2_attacks=[]
-    p3_attacks=[]
-    p4_attacks=[]
-    for frames in game.frames:
-        if frames.ports[0] != None:
-            p1_frames = frames.ports[0].leader 
-            p1_attacks.append(p1_frames.post.last_attack_landed)
-        if frames.ports[1] != None:
-            p2_frames = frames.ports[1].leader
-            p2_attacks.append(p2_frames.post.last_attack_landed)
-        if frames.ports[2] != None:
-            p3_frames = frames.ports[2].leader
-            p3_attacks.append(p3_frames.post.last_attack_landed)
-        if frames.ports[3] != None:
-            p4_frames = frames.ports[3].leader
-            p4_attacks.append(p4_frames.post.last_attack_landed)
-    attacks_long = [p1_attacks, p2_attacks, p3_attacks, p4_attacks]
-    attacks = []
-    for x in attacks_long:
-        rm_consecutives = [i[0] for i in groupby(x)]
-        attacks.append(rm_consecutives)
-    return(attacks)
-
+    index = {'state':state[player], 'position':position[player]}
+    df = pd.DataFrame(index)
+    return(df)
