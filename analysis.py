@@ -1,19 +1,14 @@
 # File --analysis.py--
 
+import numpy as np
 import pandas as pd
-from itertools import groupby
+
 
 ## CHARACTER ##
 
-def characters(game):
-    characters = []
-    for players in game.start.players:
-        if players == None:
-            character = None
-        else:
-            character = players.character
-        characters.append(character)
-    return(characters)
+#def characters(game, port):
+#    characters = [x.character for x in game.start.players if x != None]
+#    return(characters[port])
 
 ## STAGE ##
 
@@ -22,35 +17,19 @@ def stage(game):
     return(stage)
 
 ## DATA FRAME ##
+class df():
+    def data(game, port, port2):
+        state = np.array([x.ports[port].leader.post.state 
+            for x in game.frames if x.ports[port] != None])
+        position = np.array([x.ports[port].leader.post.position 
+            for x in game.frames if x.ports[port] != None])
+        position_op = np.array([x.ports[port2].leader.post.position 
+            for x in game.frames if x.ports[port2] != None])
+        last_attack_landed_op = np.array(
+            [x.ports[port2].leader.post.last_attack_landed
+            for x in game.frames if x.ports[port2] != None])
+        df = pd.DataFrame({'state':state, 'position':position,
+            'position_op':position_op,
+            'last_attack_landed_op':last_attack_landed_op})
+        return(df)
 
-def data(game, player):
-    p1_state=[]
-    p1_position=[]
-    p2_state=[]
-    p2_position=[]
-    p3_state=[]
-    p3_position=[]
-    p4_state=[]
-    p4_position=[]
-    for frames in game.frames:
-        if frames.ports[0] != None:
-            p1_frames = frames.ports[0].leader 
-            p1_state.append(p1_frames.post.state)
-            p1_position.append(p1_frames.post.position)
-        if frames.ports[1] != None:
-            p2_frames = frames.ports[1].leader
-            p2_state.append(p2_frames.post.state)
-            p2_position.append(p1_frames.post.position)
-        if frames.ports[2] != None:
-            p3_frames = frames.ports[2].leader
-            p3_state.append(p3_frames.post.state)
-            p3_position.append(p1_frames.post.position)
-        if frames.ports[3] != None:
-            p4_frames = frames.ports[3].leader
-            p4_state.append(p4_frames.post.state)
-            p4_position.append(p1_frames.post.position)
-    state = [p1_state, p2_state, p3_state, p4_state]
-    position = [p1_position, p2_position, p3_position, p4_position]
-    index = {'state':state[player], 'position':position[player]}
-    df = pd.DataFrame(index)
-    return(df)
