@@ -10,26 +10,41 @@ import pandas as pd
 #    characters = [x.character for x in game.start.players if x != None]
 #    return(characters[port])
 
-## STAGE ##
-
-def stage(game):
-    stage = game.start.stage
-    return(stage)
-
 ## DATA FRAME ##
-class df():
-    def data(game, port, port2):
-        state = np.array([x.ports[port].leader.post.state 
-            for x in game.frames if x.ports[port] != None])
-        position = np.array([x.ports[port].leader.post.position 
-            for x in game.frames if x.ports[port] != None])
-        position_op = np.array([x.ports[port2].leader.post.position 
-            for x in game.frames if x.ports[port2] != None])
-        last_attack_landed_op = np.array(
-            [x.ports[port2].leader.post.last_attack_landed
-            for x in game.frames if x.ports[port2] != None])
-        df = pd.DataFrame({'state':state, 'position':position,
-            'position_op':position_op,
-            'last_attack_landed_op':last_attack_landed_op})
-        return(df)
+class Data:
+    def __init__(self, game, port, port2):
+        self.game = game
+        self.port = port
+        self.port2 = port2
 
+    def Stage(self):
+        stage = self.game.start.stage
+        return(stage)
+
+    def ProcessData(self):
+        state = np.array([int(x.ports[self.port].leader.post.state)
+            for x in self.game.frames if x.ports[self.port] != None])
+
+        position_x = np.array([int(x.ports[self.port].leader.post.position.x)
+            for x in self.game.frames if x.ports[self.port] != None])
+
+        position_y = np.array([int(x.ports[self.port].leader.post.position.y)
+            for x in self.game.frames if x.ports[self.port] != None])
+
+        position_x_op = np.array([int(x.ports[self.port2].leader.post.position.x)
+            for x in self.game.frames if x.ports[self.port2] != None])
+
+        position_y_op = np.array([int(x.ports[self.port2].leader.post.position.y)
+            for x in self.game.frames if x.ports[self.port2] != None])
+
+        #last_attack_landed_op = np.array(
+        #    [int(x.ports[self.port2].leader.post.last_attack_landed)
+        #     for x in self.game.frames if x.ports[self.port2] != None])
+
+
+
+        df = pd.DataFrame({'state':state, 'position_x':position_x,
+        'position_y':position_y,
+        'position_x_op':position_x_op, 'position_y_op':position_y_op,})
+        #'last_attack_landed_op':last_attack_landed_op})
+        return(df)
