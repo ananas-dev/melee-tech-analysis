@@ -23,28 +23,36 @@ class Data:
 
     def ProcessData(self):
         state = np.array([int(x.ports[self.port].leader.post.state)
-            for x in self.game.frames if x.ports[self.port] != None])
+            for x in self.game.frames])
 
         position_x = np.array([int(x.ports[self.port].leader.post.position.x)
-            for x in self.game.frames if x.ports[self.port] != None])
+            for x in self.game.frames])
 
         position_y = np.array([int(x.ports[self.port].leader.post.position.y)
-            for x in self.game.frames if x.ports[self.port] != None])
+            for x in self.game.frames])
+
+        damage = np.array([int(x.ports[self.port].leader.post.damage)
+            for x in self.game.frames])
+        
+        stocks = np.array([int(x.ports[self.port].leader.post.stocks)
+            for x in self.game.frames])
 
         position_x_op = np.array([int(x.ports[self.port2].leader.post.position.x)
-            for x in self.game.frames if x.ports[self.port2] != None])
+            for x in self.game.frames])
 
         position_y_op = np.array([int(x.ports[self.port2].leader.post.position.y)
-            for x in self.game.frames if x.ports[self.port2] != None])
-
-        #last_attack_landed_op = np.array(
-        #    [int(x.ports[self.port2].leader.post.last_attack_landed)
-        #     for x in self.game.frames if x.ports[self.port2] != None])
-
-
+            for x in self.game.frames])
+        
+        last_attack_landed_op = []
+        for x in self.game.frames:
+            if x.ports[self.port2].leader.post.last_attack_landed == None:
+                 last_attack_landed_op.append(0)
+            else:
+                last_attack_landed_op.append((x.ports[self.port2].leader.post.last_attack_landed).value)
+            
 
         df = pd.DataFrame({'state':state, 'position_x':position_x,
-        'position_y':position_y,
-        'position_x_op':position_x_op, 'position_y_op':position_y_op,})
-        #'last_attack_landed_op':last_attack_landed_op})
+            'position_y':position_y, 'damage':damage, 'stocks':stocks,
+            'position_x_op':position_x_op, 'position_y_op':position_y_op,
+            'last_attack_landed_op':last_attack_landed_op})
         return(df)

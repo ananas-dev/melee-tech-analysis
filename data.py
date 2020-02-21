@@ -18,11 +18,11 @@ def GetNametag(game):
 def main(path):
     files = [f for f in listdir(path) if isfile(join(path, f))]
     #print(files)
-    df_data = pd.DataFrame()
+    df_final = pd.DataFrame()
     for f in files:
         print(f)
         game = Game(str(path) + '/' + str(f))
-        print(GetNametag(game))
+        #print(GetNametag(game))
         try:
             port = GetPorts(game)[GetNametag(game).index('ＪＯＥＹ')]
         except ValueError:
@@ -32,11 +32,14 @@ def main(path):
         df = data.ProcessData()
         df = df.loc[df['state'].shift(-1) != df['state']]
         df = df.loc[df['state'].isin([199, 200, 201])]
-        df_data = df_data.append(df)
-
-    df_data.to_csv('test.csv')
-    df_data.to_csv('test.txt', header=None, index=None)
-
+        df_final = df_final.append(df)
+    df_final = df_final.sort_values(by=['state'])
+    df_final = df_final.reset_index(drop=True)
+    df_final.to_csv('test.csv')
+    df_final.to_csv('data.txt', header=None, index=None)
+    df_final_names = list(df.columns.values)
+    with open('data_names.txt', 'w') as f:
+        f.write(",".join(df_final_names))
 
 if __name__ == '__main__':
     main('dataset')
