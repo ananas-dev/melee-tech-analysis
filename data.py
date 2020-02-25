@@ -31,11 +31,12 @@ def main(path):
         except ValueError:
             print("Error: the player insn't in this file:",f)
             exit()
-        port2 = GetPorts(game)[1 - port]
+        port2 = GetPorts(game)[1 - GetPorts(game).index(port)]
         data = analysis.Data(game, port, port2)
         df = data.ProcessData()
-        df = df.loc[df['state'].shift(-1) != df['state']]
-        df = df.loc[df['state'].isin([199, 200, 201])]
+        #df = df.loc[df['state'].shift(-1) != df['state']]
+        #df = df.loc[df['state'].isin([199, 200, 201])]
+
         df_final = df_final.append(df)
     df_final = df_final.sort_values(by=['state'])
     df_final = df_final.reset_index(drop=True)
@@ -46,6 +47,4 @@ def main(path):
         f.write(",".join(df_final_names))
 
 if __name__ == '__main__':
-    main('database')
-
-
+    main('wizy')

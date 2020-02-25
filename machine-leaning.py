@@ -1,6 +1,6 @@
 #File --machine-learning.py--
 
-#from sklearn import tree
+from sklearn import tree
 from sklearn import preprocessing
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
@@ -31,7 +31,7 @@ import numpy as np
 
 dataset = np.loadtxt('data.txt', delimiter=",")
 
-X = dataset[:,1:10]
+X = dataset[:,1:5]
 y = dataset[:,0]
 
 #X = preprocessing.normalize(X, norm='l2')
@@ -46,16 +46,18 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = .1)
  # Decision Tree
 
 #clf = tree.DecisionTreeClassifier()
-#clf = clf.fit(features, labels)
+#clf = clf.fit(X_train, y_train)
 
 # Neural Network
 
+#clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
+#    hidden_layer_sizes=(20, 10), random_state=1)
+
 clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
-    hidden_layer_sizes=(20, 10), random_state=1)
+    hidden_layer_sizes=(25,), random_state=1)
 
 clf.fit(X_train, y_train)
 
 prediction = clf.predict(X_test)
 print(accuracy_score(y_test, prediction))
-#print(clf.predict_proba([[2,-66,0,44,2,7,-47,0,56]]))
 
