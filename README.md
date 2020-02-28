@@ -1,3 +1,3 @@
-# slippi-data-analysis
+# Melee tech analysis
 
-Some tests with machine learning and melee replay files
+Messing around with machine learning and melee replay files
