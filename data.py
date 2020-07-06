@@ -1,18 +1,18 @@
 # File --data.py--
 from os import listdir
 from os.path import isfile, join
-import numpy as np
+from sys import exit
 import pandas as pd
 from slippi import Game
 import analysis
 
 
-def GetPorts(game):
+def get_ports(game):
     return [x for x in range(0, 4) if game.frames[1].ports[x] != None]
 
 
 def GetNametag(game):
-    return [x.tag for x in game.start.players if x != None]
+    return [x.tag for x in game.start.players if x is not None]
     
 
 def main(path):
@@ -20,18 +20,18 @@ def main(path):
     #print(files)
     df_final = pd.DataFrame()
     count = 0
-    for f in files:
+    for file in files:
         count = count + 1
-        print(count,'/',len(files))
-        game = Game(str(path) + '/' + str(f))
+        print(count, '/', len(files))
+        game = Game(str(path) + '/' + str(file))
         #print(game.start.players)
         #print(GetNametag(game))
         try:
-            port = GetPorts(game)[GetNametag(game).index('ＷＩＺＹ')]
+            port = get_ports(game)[GetNametag(game).index('ＷＩＺＹ')]
         except ValueError:
-            print("Error: the player insn't in this file:",f)
+            print("Error: the player insn't in this file:", f)
             exit()
-        port2 = GetPorts(game)[1 - GetPorts(game).index(port)]
+        port2 = get_ports(game)[1 - get_ports(game).index(port)]
         data = analysis.Data(game, port, port2)
         df = data.ProcessData()
         #df = df.loc[df['state'].shift(-1) != df['state']]
